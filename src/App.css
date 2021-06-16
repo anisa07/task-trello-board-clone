@@ -1,1 +1,8 @@
 
+.app {
+    padding: 1rem;
+}
+
+.error {
+    color: crimson;
+}

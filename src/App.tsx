@@ -1,10 +1,11 @@
 import React from 'react';
 import './App.css';
+import { Board } from './pages/board/Board';
 
 function App() {
   return (
-    <div>
-
+    <div className="app">
+      <Board />
     </div>
   );
 }
