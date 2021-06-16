@@ -15,7 +15,7 @@ export const Name = (props: NameProps) => {
     const {id, buttonText, placeholder, label, error, value: savedValue, onChangeValue} = props;
     const [editMode, setEditMode] = useState(true);
     const [value, setValue] = useState(savedValue);
-   
+
     useEffect(() => {
         if (!savedValue) {
             setEditMode(true);
