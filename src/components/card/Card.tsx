@@ -1,7 +1,7 @@
 import {CardModel} from "../../types/CardModel";
 import {ComponentHeader} from "../componentHeader/componentHeader";
 import {useState} from "react";
-import {TextArea} from "../TextArea/TextArea";
+import {TextArea} from "../textArea/TextArea";
 import './Card.css';
 import { MoveControl } from "../moveControl/MoveControl";
 import {MoveDirection} from "../../types/MoveDirection";

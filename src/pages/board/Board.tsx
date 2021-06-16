@@ -27,7 +27,7 @@ export const Board = () => {
 
     return (
         <div className="board-container">
-            <h4>To start work with a board, create its name and press enter</h4>
+            <h4>To start work with a board, set new name and click out</h4>
             <ComponentHeader
                 name={board.name}
                 label="Board Name"

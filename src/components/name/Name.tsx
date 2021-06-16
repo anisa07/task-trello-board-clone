@@ -2,17 +2,14 @@ import {ChangeEvent, useEffect, useState} from "react";
 import './Name.css';
 
 interface NameProps {
-    id?: string,
     buttonText?: string,
-    placeholder?: string,
     label?: string,
-    error?: string,
     value: string,
     onChangeValue: (v: string) => void;
 }
 
 export const Name = (props: NameProps) => {
-    const {id, buttonText, placeholder, label, error, value: savedValue, onChangeValue} = props;
+    const {buttonText, label, value: savedValue, onChangeValue} = props;
     const [editMode, setEditMode] = useState(true);
     const [value, setValue] = useState(savedValue);
 
@@ -46,14 +43,13 @@ export const Name = (props: NameProps) => {
 
     return (
         <div className={"name-container"}>
-            <label htmlFor={id}>{label}</label>
+            <label htmlFor={label}>{label}</label>
             {
                 editMode
                     ? <div className={"input-container"}>
                         <input
-                            id={id}
+                            id={label}
                             type={'text'}
-                            placeholder={placeholder}
                             value={value}
                             onChange={handleChangeValue}
                             onBlur={handleUpdate}
@@ -62,7 +58,6 @@ export const Name = (props: NameProps) => {
                     </div>
                     : <p onClick={toggleEditMode}>Click to &#9998; {value}</p>
             }
-            <p className={'error'}>{error}</p>
         </div>
     )
 }
