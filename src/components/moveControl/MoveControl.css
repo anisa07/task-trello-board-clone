@@ -1,0 +1,10 @@
+
+.moveContainer {
+    margin: 1rem;
+    display: flex;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+}

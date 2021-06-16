@@ -11,3 +11,9 @@ export const createColumn = () => ({
     name: "",
     cards: []
 })
+
+export const createCard = () => ({
+    id: uuidv4(),
+    name: "",
+    description: ""
+})
