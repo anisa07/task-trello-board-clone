@@ -17,7 +17,7 @@ to apply names for board, columns, cards click check mark or out of the input fi
 - it is also possible to move card Top and Bottom in a column if card is not alone
 - card can be moved between columns as well with Left and Right buttons on move control
 
-### impovements
+### improvements
 - add users and assign tickets
 - styling
 - get rid of prop drilling 
@@ -25,4 +25,5 @@ to apply names for board, columns, cards click check mark or out of the input fi
 - tools customization (real trello doesn't have it)
 - virtualization for long lists
 - tests
+- dnd
 etc.
