@@ -1,4 +1,4 @@
-import { ComponentHeader } from "../../components/componentHeader/componentHeader"
+import {ComponentHeader} from '@anisa07/design-package-app-test';
 import {Columns} from "../../components/columns/Columns";
 import {useState} from "react";
 import {BoardModel} from "../../types/BoardModel";

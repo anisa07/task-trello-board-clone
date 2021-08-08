@@ -1,21 +1,38 @@
 import {CardModel} from "../../types/CardModel";
-import {ComponentHeader} from "../componentHeader/componentHeader";
-import {useState} from "react";
-import {TextArea} from "../textArea/TextArea";
-import './Card.css';
-import { MoveControl } from "../moveControl/MoveControl";
-import {MoveDirection} from "../../types/MoveDirection";
+import {ComponentHeader} from '@anisa07/design-package-app-test';
+import {ChangeEvent, useState} from "react";
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from "@material-ui/core/Button";
+import { useCommonStyles } from "@anisa07/design-package-app-test";
+
+const useStyles = makeStyles({
+    cardContainer: {
+        padding: '1rem',
+    },
+    editContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        margin: '0.5rem 0'
+    },
+    cardButton: {
+        marginTop: '0.5rem',
+        alignSelf: 'flex-start'
+    },
+});
 
 interface CardProps {
+    index: number;
     card: CardModel;
     onUpdateCard: (updateCard: CardModel) => void;
     onDeleteCard: (id: string) => void;
-    onMoveCard: (direction: MoveDirection, cardId: string) => void;
 }
 
 export const Card = (props: CardProps) => {
-    const {card, onUpdateCard, onDeleteCard, onMoveCard} = props;
+    const {card, onUpdateCard, onDeleteCard} = props;
     const [editCard, setEditCard] = useState(false);
+    const classes = useStyles();
+    const commonStyles = useCommonStyles();
 
     const toggleEditCard = () => {
         setEditCard(!editCard)
@@ -31,16 +48,12 @@ export const Card = (props: CardProps) => {
         onUpdateCard({...card, name: newName});
     }
 
-    const handleUpdateCardDescription = (description: string) => {
-        onUpdateCard({...props.card, description})
-    }
-
-    const handleMoveCard = (direction: MoveDirection) => {
-        onMoveCard(direction, card.id)
+    const handleUpdateCardDescription = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        onUpdateCard({...props.card, description: e.target?.value || ''})
     }
 
     return (
-        <div className="card">
+        <div className={`${classes.cardContainer} ${commonStyles.border}`}>
             <ComponentHeader
                 name={card.name}
                 label="Card Name"
@@ -48,15 +61,21 @@ export const Card = (props: CardProps) => {
                 onDeleteComponent={handleDeleteCard}
                 onUpdateComponentName={handleUpdateCardName}
             />
-            {editCard && <>
-                <TextArea
-                    value={card.description}
-                    label="Description"
-                    onChangeValue={handleUpdateCardDescription} />
-                <MoveControl onMoveCard={handleMoveCard}/>
-            </>}
-            <div>
-                <button className="cardButton" onClick={toggleEditCard}>{editButtonTitle()}</button>
+            <div className={classes.editContainer}>
+                {editCard && <>
+                    <TextField
+                        inputProps={{
+                            'data-testid': 'description'
+                        }}
+                        label="Description"
+                        multiline
+                        rows={4}
+                        value={card.description}
+                        onChange={handleUpdateCardDescription}
+                        variant="outlined"
+                    />
+                </>}
+                <Button className={classes.cardButton} onClick={toggleEditCard}>{editButtonTitle()}</Button>
             </div>
         </div>
     )

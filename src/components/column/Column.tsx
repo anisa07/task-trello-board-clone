@@ -1,18 +1,32 @@
-import {ColumnModel} from "../../types/ColumnModel";
-import {ComponentHeader} from "../componentHeader/componentHeader";
-import './Column.css';
+import {ComponentHeader} from '@anisa07/design-package-app-test';
 import {Cards} from "../cards/Cards";
-import {MoveDirection} from "../../types/MoveDirection";
+import {makeStyles} from "@material-ui/core/styles";
+import { useCommonStyles } from "@anisa07/design-package-app-test";
+import {ColumnModel} from "../../types/ColumnModel";
 
 interface ColumnProps {
+    index: number,
     column: ColumnModel,
     onUpdateColumn: (copyColumn: ColumnModel) => void;
     onDeleteColumn: (id: string) => void;
-    onMoveCard: (direction: MoveDirection, columnId: string, cardId: string) => void;
 }
 
+const useStyles = makeStyles({
+    column: {
+        width: '300px',
+        marginRight: '1rem',
+        padding: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '550px',
+        minWidth: '250px'
+    },
+});
+
 export const Column = (props: ColumnProps) => {
-    const {column, onUpdateColumn, onDeleteColumn, onMoveCard} = props;
+    const {column, onUpdateColumn, onDeleteColumn} = props;
+    const classes = useStyles();
+    const commonStyles = useCommonStyles();
 
     const handleDeleteColumn = () => {
         onDeleteColumn(column.id);
@@ -23,12 +37,8 @@ export const Column = (props: ColumnProps) => {
         onUpdateColumn(copyColumn);
     }
 
-    const handleMoveCard = (direction: MoveDirection, cardId: string) => {
-        onMoveCard(direction, column.id, cardId);
-    }
-
     return (
-        <div className="column">
+        <div className={`${classes.column} ${commonStyles.border}`}>
             <ComponentHeader
                 name={column.name}
                 label="Column Name"
@@ -36,11 +46,12 @@ export const Column = (props: ColumnProps) => {
                 onDeleteComponent={handleDeleteColumn}
                 onUpdateComponentName={handleUpdateColumnName}
             />
-            <Cards
-                column={column}
-                onUpdateColumn={onUpdateColumn}
-                onMoveCard={handleMoveCard}
-            />
+            <div>
+                <Cards
+                    column={column}
+                    onUpdateColumn={onUpdateColumn}
+                />
+            </div>
         </div>
     )
 }

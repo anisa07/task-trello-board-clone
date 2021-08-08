@@ -1,6 +1,26 @@
 
+body {
+    background-color: #ffffff;
+    font-family: 'Coming Soon', cursive;
+}
+
 .app {
     padding: 1rem;
+    min-height: 100vh;
+    position: relative;
+    height: 100%;
+}
+
+.app::after {
+    content: "";
+    background-image: url("images/paper.png");
+    opacity: 0.8;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
 }
 
 .error {

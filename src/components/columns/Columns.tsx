@@ -1,18 +1,27 @@
-import {ColumnModel} from "../../types/ColumnModel";
-import {BoardModel} from "../../types/BoardModel";
 import {createColumn} from "../../helpers/boardHelper";
-import './Columns.css';
 import {Column} from "../column/Column";
-import {MoveDirection} from "../../types/MoveDirection";
 import {findIndexById} from "../../helpers/arrayHelper";
+import {DragDropContext, DragUpdate} from "react-beautiful-dnd";
+import Button from "@material-ui/core/Button";
+import {makeStyles} from "@material-ui/core/styles";
+import {BoardModel} from "../../types/BoardModel";
+import {ColumnModel} from "../../types/ColumnModel";
 
 interface ColumnsProps {
     board: BoardModel,
     onUpdateBoard: (copyBoard: BoardModel) => void
 }
 
+const useStyles = makeStyles({
+    columns: {
+        display: 'flex',
+        overflow: "scroll"
+    },
+});
+
 export const Columns = (props: ColumnsProps) => {
     const {board, onUpdateBoard} = props;
+    const classes = useStyles();
 
     const handleUpdateColumn = (column: ColumnModel) => {
         const copyBoard = {...board};
@@ -41,64 +50,47 @@ export const Columns = (props: ColumnsProps) => {
         && (board.columns.length === 0
         || board.columns[board.columns.length - 1].name);
 
-    const handleMoveCard = (direction: MoveDirection, columnId: string, cardId: string) => {
-        const copyBoard = {...board};
-        const columnIndex = findIndexById(copyBoard.columns, columnId);
-        const cardIndex = findIndexById(copyBoard.columns[columnIndex].cards, cardId);
-        const card = copyBoard.columns[columnIndex].cards[cardIndex];
-        switch (direction) {
-            case MoveDirection.TOP:
-                if (cardIndex > 0) {
-                    const temp = copyBoard.columns[columnIndex].cards[cardIndex-1];
-                    copyBoard.columns[columnIndex].cards[cardIndex-1] = card;
-                    copyBoard.columns[columnIndex].cards[cardIndex] = temp;
-                } else {
-                    return;
-                }
-                break;
-            case MoveDirection.BOTTOM:
-                if (cardIndex < copyBoard.columns[columnIndex].cards.length-1) {
-                    const temp = copyBoard.columns[columnIndex].cards[cardIndex+1];
-                    copyBoard.columns[columnIndex].cards[cardIndex+1] = card;
-                    copyBoard.columns[columnIndex].cards[cardIndex] = temp;
-                } else {
-                    return;
-                }
-                break;
-            case MoveDirection.LEFT:
-                if (columnIndex > 0) {
-                    copyBoard.columns[columnIndex-1].cards.push(card);
-                    copyBoard.columns[columnIndex].cards.splice(cardIndex, 1);
-                } else {
-                    return;
-                }
-                break;
-            case MoveDirection.RIGHT:
-                if (columnIndex < copyBoard.columns.length-1) {
-                    copyBoard.columns[columnIndex+1].cards.push(card);
-                    copyBoard.columns[columnIndex].cards.splice(cardIndex, 1);
-                } else {
-                    return;
-                }
-                break;
+    const handleDrop = (e: DragUpdate) => {
+        const {destination, source} = e;
+        const boardCopy = {...board}
+        const destId = destination?.droppableId;
+        const sourceId = source?.droppableId;
+        const findDestinationIndex = boardCopy.columns.findIndex(c => c.id === destId);
+        const findSourceIndex = boardCopy.columns.findIndex(c => c.id === sourceId);
+        const destIndex = destination?.index;
+        const sourceIndex = source?.index;
+        if (findSourceIndex > -1 && findDestinationIndex > -1 && destIndex !== undefined && sourceIndex !== undefined) {
+            const card = boardCopy.columns[findSourceIndex].cards[sourceIndex];
+            boardCopy.columns[findDestinationIndex].cards.splice(destIndex, 0, card);
+            if (destId === sourceId) {
+                boardCopy.columns[findSourceIndex].cards.splice(destIndex < sourceIndex ? sourceIndex + 1 : sourceIndex, 1);
+            } else {
+                boardCopy.columns[findSourceIndex].cards.splice(sourceIndex, 1);
+            }
+            onUpdateBoard(boardCopy);
         }
-        onUpdateBoard(copyBoard);
     }
 
-    return (<div className='columns'>
-        {board.columns.map(column =>
-            <Column
-                key={column.id}
-                column={column}
-                onUpdateColumn={handleUpdateColumn}
-                onDeleteColumn={handleDeleteColumn}
-                onMoveCard={handleMoveCard}
-            />
-        )}
-        <div>
-            {canAddNewColumn() && <button onClick={handleNewColumn}>
-                Add New Column
-            </button>}
-        </div>
-    </div>);
+    return (
+        <div className={classes.columns}>
+            <DragDropContext
+                onDragEnd={handleDrop}
+            >
+                {board.columns.map((column, index) =>
+                    <Column
+                        key={column.id}
+                        index={index}
+                        column={column}
+                        onUpdateColumn={handleUpdateColumn}
+                        onDeleteColumn={handleDeleteColumn}
+                    />
+                )}
+            </DragDropContext>
+
+            <div>
+                {canAddNewColumn() && <Button onClick={handleNewColumn}>
+                    Add New Column
+                </Button>}
+            </div>
+        </div>);
 }
