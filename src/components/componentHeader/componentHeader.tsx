@@ -1,5 +1,5 @@
-import {Name} from "../name/Name";
 import './componentHeader.css';
+import {EditableName} from '@anisa07/design-package-app-test';
 
 interface ComponentHeaderProps {
     name: string;
@@ -18,7 +18,7 @@ export const ComponentHeader = (props: ComponentHeaderProps) => {
 
     return (
         <div className="board-header">
-            <Name
+            <EditableName
                 label={label}
                 value={name}
                 onChangeValue={handleUpdateComponent}
